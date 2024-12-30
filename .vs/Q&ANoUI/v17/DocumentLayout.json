@@ -27,15 +27,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Q\u0026ANoUI",
+              "Title": "Q\u0026ANoUI.csproj",
               "DocumentMoniker": "C:\\Users\\kotor\\Documents\\Q\u0026ANoUI\\Q\u0026ANoUI.csproj",
               "RelativeDocumentMoniker": "Q\u0026ANoUI.csproj",
               "ToolTip": "C:\\Users\\kotor\\Documents\\Q\u0026ANoUI\\Q\u0026ANoUI.csproj",
               "RelativeToolTip": "Q\u0026ANoUI.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-12-30T13:25:18.829Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-30T13:25:18.829Z"
             },
             {
               "$type": "Document",
@@ -45,7 +44,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\kotor\\Documents\\Q\u0026ANoUI\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAHAAAAAAAAAAAAAAwIIAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAANEAAAAAAAAAAAAAAO0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T12:58:07.181Z",
               "EditorCaption": ""

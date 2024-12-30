@@ -104,17 +104,23 @@ namespace QANoUI
                     if (client != null)
                     {
                         var response = await client.GetAsync("test");
-                        string currentValue = response?.Body?.ToString() ?? "";
+                        string currentValue = response?.Body?.ToString()?.Trim('"') ?? "";
+                        
+                        Debug.WriteLine($"Current value: {currentValue}, Last value: {lastTestValue}");
                         
                         // Chỉ thực hiện khi giá trị thay đổi và là "1"
                         if (currentValue == "1" && currentValue != lastTestValue)
                         {
+                            Debug.WriteLine("Triggering Windows key press");
+                            
                             // Nhấn phím Windows
                             keybd_event(VK_LWIN, 0, 0, 0);
-                            // Chờ một chút
-                            await Task.Delay(100);
+                            // Chờ lâu hơn một chút
+                            await Task.Delay(200);
                             // Nhả phím Windows
                             keybd_event(VK_LWIN, 0, KEYEVENTF_KEYUP, 0);
+                            
+                            Debug.WriteLine("Windows key press completed");
                         }
                         
                         lastTestValue = currentValue;
@@ -124,7 +130,7 @@ namespace QANoUI
                 {
                     Debug.WriteLine($"Lỗi khi theo dõi Firebase: {ex.Message}");
                 }
-                await Task.Delay(1000); // Kiểm tra mỗi giây
+                await Task.Delay(500);
             }
         }
 
@@ -137,11 +143,24 @@ namespace QANoUI
             {
                 if (client != null)
                 {
-                    // Lưu giá trị "1" dưới dạng chuỗi
-                    await client.SetAsync("test", "1");
-                    // Không cần nhấn phím Windows ở đây nữa vì MonitorFirebaseAsync sẽ làm việc đó
-                    await Task.Delay(5000);
+                    Debug.WriteLine("Starting SaveToFirebase");
+                    
+                    // Đảm bảo xóa giá trị cũ trước
                     await client.DeleteAsync("test");
+                    await Task.Delay(100);
+                    
+                    // Reset lastTestValue
+                    lastTestValue = "";
+                    
+                    // Lưu giá trị "1"
+                    Debug.WriteLine("Setting test value to 1");
+                    await client.SetAsync("test", "1");
+                    await Task.Delay(5000);
+                    
+                    Debug.WriteLine("Deleting test value");
+                    await client.DeleteAsync("test");
+                    
+                    Debug.WriteLine("SaveToFirebase completed");
                 }
             }
             catch (Exception ex)
