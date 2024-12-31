@@ -564,11 +564,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kotor\\Documents\\Q&ANoUI\\Q&ANoUI.csproj",
-      "projectName": "Q&ANoUI",
-      "projectPath": "C:\\Users\\kotor\\Documents\\Q&ANoUI\\Q&ANoUI.csproj",
+      "projectUniqueName": "C:\\Users\\kotor\\Documents\\System203\\System203.csproj",
+      "projectName": "System203",
+      "projectPath": "C:\\Users\\kotor\\Documents\\System203\\System203.csproj",
       "packagesPath": "C:\\Users\\kotor\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kotor\\Documents\\Q&ANoUI\\obj\\",
+      "outputPath": "C:\\Users\\kotor\\Documents\\System203\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kotor\\AppData\\Roaming\\NuGet\\NuGet.Config",
