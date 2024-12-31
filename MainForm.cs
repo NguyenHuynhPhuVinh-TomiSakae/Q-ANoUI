@@ -61,7 +61,8 @@ namespace System203
 
         private void BtnCtrlK_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng Ctrl+K AI sẽ được triển khai sau", "Thông báo");
+            this.Hide();
+            CtrlKProgram.Start();
         }
     }
 } 

@@ -102,26 +102,29 @@ namespace System203
                 {
                     await Task.Delay(100);
                     
-                    if (GetAsyncKeyState((Keys.Control)) != 0)
+                    if (GetAsyncKeyState(Keys.Control) != 0)
                     {
-                        if (enableCtrlH && GetAsyncKeyState(Keys.H) != 0)
+                        if (enableCtrlH && (GetAsyncKeyState(Keys.H) & 0x8000) != 0 && (GetAsyncKeyState(Keys.Control) & 0x8000) != 0)
                         {
                             await SaveToFirebase();
                         }
-                        else if (GetAsyncKeyState(Keys.J) != 0)
+                        else if ((GetAsyncKeyState(Keys.J) & 0x8000) != 0 && (GetAsyncKeyState(Keys.Control) & 0x8000) != 0)
                         {
                             await SaveClipboardToFirebase();
                             await Task.Delay(500);
                         }
-                        else if (GetAsyncKeyState(Keys.K) != 0)
+                        else if ((GetAsyncKeyState(Keys.K) & 0x8000) != 0 && (GetAsyncKeyState(Keys.Control) & 0x8000) != 0)
                         {
                             await LoadClipboardFromFirebase();
                             await Task.Delay(500);
                         }
-                        else if (GetAsyncKeyState(Keys.X) != 0 && GetAsyncKeyState(Keys.ShiftKey) != 0)
-                        {
-                            Environment.Exit(0);
-                        }
+                    }
+
+                    if ((GetAsyncKeyState(Keys.Control) & 0x8000) != 0 
+                        && (GetAsyncKeyState(Keys.ShiftKey) & 0x8000) != 0 
+                        && (GetAsyncKeyState(Keys.X) & 0x8000) != 0)
+                    {
+                        Environment.Exit(0);
                     }
                 }
             }

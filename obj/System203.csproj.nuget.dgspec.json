@@ -49,6 +49,10 @@
               "target": "Package",
               "version": "[2.0.4, )"
             },
+            "Google_GenerativeAI": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
             "Microsoft.NET.ILLink.Analyzers": {
               "suppressParent": "All",
               "target": "Package",

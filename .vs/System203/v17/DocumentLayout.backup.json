@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\kotor\\Documents\\System203\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|c:\\users\\kotor\\documents\\system203\\ctrlkprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|solutionrelative:ctrlkprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|c:\\users\\kotor\\documents\\system203\\nouiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|solutionrelative:nouiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|c:\\users\\kotor\\documents\\system203\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|c:\\users\\kotor\\documents\\system203\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|c:\\users\\kotor\\documents\\system203\\nouiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A6EF3883-D983-4887-BC12-F7EDB9140DE8}|System203.csproj|solutionrelative:nouiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,7 +34,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "CtrlKProgram.cs",
+              "DocumentMoniker": "C:\\Users\\kotor\\Documents\\System203\\CtrlKProgram.cs",
+              "RelativeDocumentMoniker": "CtrlKProgram.cs",
+              "ToolTip": "C:\\Users\\kotor\\Documents\\System203\\CtrlKProgram.cs",
+              "RelativeToolTip": "CtrlKProgram.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwCUAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-31T05:31:59.395Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "NoUIProgram.cs",
               "DocumentMoniker": "C:\\Users\\kotor\\Documents\\System203\\NoUIProgram.cs",
               "RelativeDocumentMoniker": "NoUIProgram.cs",
@@ -43,7 +60,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "MainForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\kotor\\Documents\\System203\\MainForm.cs",
               "RelativeDocumentMoniker": "MainForm.cs",
@@ -55,7 +72,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\kotor\\Documents\\System203\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",

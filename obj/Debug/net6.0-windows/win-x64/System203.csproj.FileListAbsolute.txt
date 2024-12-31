@@ -521,3 +521,4 @@ C:\Users\kotor\Documents\System203\obj\Debug\net6.0-windows\win-x64\System203.ge
 C:\Users\kotor\Documents\System203\obj\Debug\net6.0-windows\win-x64\ref\System203.dll
 C:\Users\kotor\Documents\System203\obj\Debug\net6.0-windows\win-x64\System203.MainForm.resources
 C:\Users\kotor\Documents\System203\obj\Debug\net6.0-windows\win-x64\System203.csproj.GenerateResource.cache
+C:\Users\kotor\Documents\System203\bin\Debug\net6.0-windows\win-x64\GenerativeAI.dll
