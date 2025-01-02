@@ -1,6 +1,5 @@
 using System.Text;
 using System.Text.Json;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
@@ -15,11 +14,15 @@ namespace System203
         private const int K_KEY = 0x4B;
         private const int SHIFT = 0x0004;
         private const int X_KEY = 0x58;
+        private const int KEYEVENTF_KEYUP = 0x0002;
 
         private const string API_KEY = "AIzaSyBtv2YXmEIdA27SCRf6Zu4gHo-KWxBHhYU";
         private const string API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent";
         private static readonly HttpClient client = new HttpClient();
         
+        [DllImport("user32.dll")]
+        private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
         public static void Start()
         {
             if (Environment.OSVersion.Version.Major >= 6)
@@ -79,16 +82,40 @@ namespace System203
             }
         }
 
-        private static async Task HandleGeminiQuery()
+        public static async Task HandleGeminiQuery()
         {
             try
             {
+                // Thêm Ctrl+C trước
+                keybd_event((byte)0x11, 0, 0, 0); // CTRL
+                keybd_event(0x43, 0, 0, 0);       // C
+                await Task.Delay(100);
+                keybd_event(0x43, 0, KEYEVENTF_KEYUP, 0);
+                keybd_event((byte)0x11, 0, KEYEVENTF_KEYUP, 0);
+                
+                // Đợi clipboard cập nhật
+                await Task.Delay(200);
+
                 string clipboardText = "";
                 Thread staThread = new Thread(() =>
                 {
-                    if (Clipboard.ContainsText(TextDataFormat.Text))
+                    try 
                     {
-                        clipboardText = Clipboard.GetText(TextDataFormat.Text);
+                        if (Clipboard.ContainsText(TextDataFormat.UnicodeText))
+                        {
+                            // Lấy text Unicode từ clipboard
+                            clipboardText = Clipboard.GetText(TextDataFormat.UnicodeText);
+                            
+                            // Đảm bảo encoding đúng cho tiếng Việt
+                            byte[] bytes = Encoding.Unicode.GetBytes(clipboardText);
+                            clipboardText = Encoding.Unicode.GetString(bytes);
+                            
+                            Debug.WriteLine($"Text từ clipboard: {clipboardText}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Lỗi khi lấy text từ clipboard: {ex.Message}");
                     }
                 });
                 staThread.SetApartmentState(ApartmentState.STA);
@@ -97,6 +124,9 @@ namespace System203
 
                 if (!string.IsNullOrEmpty(clipboardText))
                 {
+                    // Phần còn lại của code giữ nguyên, chỉ thêm debug
+                    Debug.WriteLine($"Text gửi tới AI: {clipboardText}");
+                    
                     var requestBody = new
                     {
                         contents = new[] {

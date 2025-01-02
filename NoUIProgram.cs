@@ -1,9 +1,8 @@
 using FireSharp.Config;
 using FireSharp.Interfaces;
-using FireSharp.Response;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace System203
 {
@@ -29,18 +28,18 @@ namespace System203
         private static string lastTestValue = "";
         
         // Thêm biến để lưu trạng thái của Ctrl + H
-        private static bool enableCtrlH = false;
+        private static bool enableFirebaseMonitoring = false;
         
         public static void Start()
         {
-            // Hiển thị MessageBox để hỏi người dùng có muốn bật Ctrl + H
+            // Đổi nội dung MessageBox
             DialogResult result = MessageBox.Show(
-                "Bạn có muốn sử dụng tính năng Ctrl + H không?",
+                "Bạn có muốn bật tính năng nhận tín hiệu không?",
                 "Cấu hình",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
             );
-            enableCtrlH = (result == DialogResult.Yes);
+            enableFirebaseMonitoring = (result == DialogResult.Yes);
 
             if (Environment.OSVersion.Version.Major >= 6)
             {
@@ -60,20 +59,6 @@ namespace System203
 
         static async Task RunAsync()
         {
-            string hướngDẫn = "HƯỚNG DẪN SỬ DỤNG:\n\n";
-            
-            if (enableCtrlH)
-            {
-                hướngDẫn += "Ctrl + H: Gửi tín hiệu tới máy khác!\n";
-            }
-            
-            hướngDẫn += "Ctrl + J: Lưu nội dung clipboard hiện tại lên CSDL.\n" + 
-                        "Ctrl + K: Lấy nội dung clipboard đã lưu từ CSDL.\n\n" +
-                        "Ctrl + Shift + X: Thoát chương trình\n\n" +
-                        "Nhấn OK để chạy chương trình ẩn.";
-                              
-            MessageBox.Show(hướngDẫn, "System203", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
             try 
             {
                 // Cấu hình Firebase
@@ -86,10 +71,7 @@ namespace System203
                 client = new FireSharp.FirebaseClient(config);
 
                 // Đăng ký các phím tắt
-                if (enableCtrlH)
-                {
-                    RegisterHotKey(Process.GetCurrentProcess().MainWindowHandle, 1, CTRL, H_KEY);
-                }
+                RegisterHotKey(Process.GetCurrentProcess().MainWindowHandle, 1, CTRL, H_KEY);
                 RegisterHotKey(Process.GetCurrentProcess().MainWindowHandle, 2, CTRL, J_KEY);
                 RegisterHotKey(Process.GetCurrentProcess().MainWindowHandle, 3, CTRL, K_KEY);
                 RegisterHotKey(Process.GetCurrentProcess().MainWindowHandle, 4, CTRL | SHIFT, X_KEY);
@@ -104,13 +86,13 @@ namespace System203
                     
                     if (GetAsyncKeyState(Keys.Control) != 0)
                     {
-                        if (enableCtrlH && (GetAsyncKeyState(Keys.H) & 0x8000) != 0 && (GetAsyncKeyState(Keys.Control) & 0x8000) != 0)
+                        if ((GetAsyncKeyState(Keys.H) & 0x8000) != 0 && (GetAsyncKeyState(Keys.Control) & 0x8000) != 0)
                         {
                             await SaveToFirebase();
                         }
                         else if ((GetAsyncKeyState(Keys.J) & 0x8000) != 0 && (GetAsyncKeyState(Keys.Control) & 0x8000) != 0)
                         {
-                            await SaveClipboardToFirebase();
+                            await CtrlKProgram.HandleGeminiQuery();
                             await Task.Delay(500);
                         }
                         else if ((GetAsyncKeyState(Keys.K) & 0x8000) != 0 && (GetAsyncKeyState(Keys.Control) & 0x8000) != 0)
@@ -140,24 +122,20 @@ namespace System203
             {
                 try
                 {
-                    // Chỉ kiểm tra Firebase nếu Ctrl + H được bật
-                    if (client != null && enableCtrlH)
+                    // Chỉ kiểm tra Firebase nếu tính năng được bật
+                    if (client != null && enableFirebaseMonitoring)
                     {
                         var response = await client.GetAsync("test");
                         string currentValue = response?.Body?.ToString()?.Trim('"') ?? "";
                         
                         Debug.WriteLine($"Current value: {currentValue}, Last value: {lastTestValue}");
                         
-                        // Chỉ thực hiện khi giá trị thay đổi và là "1"
                         if (currentValue == "1" && currentValue != lastTestValue)
                         {
                             Debug.WriteLine("Triggering Windows key press");
-                            
-                            // Nhấn phím Windows
                             keybd_event(VK_LWIN, 0, 0, 0);
                             await Task.Delay(200);
                             keybd_event(VK_LWIN, 0, KEYEVENTF_KEYUP, 0);
-                            
                             Debug.WriteLine("Windows key press completed");
                         }
                         
@@ -183,6 +161,19 @@ namespace System203
                 {
                     Debug.WriteLine("Starting SaveToFirebase");
                     
+                    // Giả lập nhấn Ctrl+C
+                    keybd_event((byte)Keys.Control, 0, 0, 0);
+                    keybd_event(0x43, 0, 0, 0);  // 0x43 là mã phím C
+                    await Task.Delay(100);
+                    keybd_event(0x43, 0, KEYEVENTF_KEYUP, 0);
+                    keybd_event((byte)Keys.Control, 0, KEYEVENTF_KEYUP, 0);
+                    
+                    // Đợi một chút để đảm bảo clipboard đã được cập nhật
+                    await Task.Delay(200);
+                    
+                    // Lưu clipboard lên Firebase
+                    await SaveClipboardToFirebase();
+                    
                     // Đảm bảo xóa giá trị cũ trước
                     await client.DeleteAsync("test");
                     await Task.Delay(100);
@@ -190,7 +181,7 @@ namespace System203
                     // Reset lastTestValue
                     lastTestValue = "";
                     
-                    // Lưu giá trị "1"
+                    // Lưu giá trị "1" trong 5 giây
                     Debug.WriteLine("Setting test value to 1");
                     await client.SetAsync("test", "1");
                     await Task.Delay(5000);
@@ -214,9 +205,16 @@ namespace System203
                 string clipboardText = "";
                 Thread staThread = new Thread(() =>
                 {
-                    if (Clipboard.ContainsText(TextDataFormat.Text))
+                    try 
                     {
-                        clipboardText = Clipboard.GetText(TextDataFormat.Text);
+                        if (Clipboard.ContainsText(TextDataFormat.UnicodeText))
+                        {
+                            clipboardText = Clipboard.GetText(TextDataFormat.UnicodeText);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Lỗi khi get clipboard: {ex.Message}");
                     }
                 });
                 staThread.SetApartmentState(ApartmentState.STA);
@@ -225,13 +223,20 @@ namespace System203
 
                 if (!string.IsNullOrEmpty(clipboardText) && client != null)
                 {
-                    Debug.WriteLine($"Đang lưu text: {clipboardText}");
-                    string encodedText = clipboardText.Replace("\\", "[[BACKSLASH]]")
-                                                   .Replace("\r\n", "[[NEWLINE]]")
-                                                   .Replace("\n", "[[NEWLINE]]")
-                                                   .Replace("\"", "[[QUOTE]]")
-                                                   .Trim('"');
-                    await client.SetAsync("clipboard", encodedText);
+                    Debug.WriteLine($"Text trước khi encode: {clipboardText}");
+                    
+                    // Chuyển text sang bytes sử dụng UTF-16
+                    byte[] textBytes = System.Text.Encoding.Unicode.GetBytes(clipboardText);
+                    string base64Text = Convert.ToBase64String(textBytes);
+                    
+                    var dataObject = new
+                    {
+                        content = base64Text,
+                        encoding = "utf16",
+                        timestamp = DateTime.UtcNow.ToString("o")
+                    };
+                    
+                    await client.SetAsync("clipboard", dataObject);
                 }
             }
             catch (Exception ex)
@@ -249,19 +254,42 @@ namespace System203
                     var response = await client.GetAsync("clipboard");
                     if (!string.IsNullOrEmpty(response.Body))
                     {
-                        string decodedText = response.Body.Trim('"')
-                                             .Replace("[[NEWLINE]]", Environment.NewLine)
-                                             .Replace("[[QUOTE]]", "\"")
-                                             .Replace("[[BACKSLASH]]", "\\");
-                        Debug.WriteLine($"Đang lấy text: {decodedText}");
+                        dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(response.Body);
+                        string base64Text = data.content.ToString();
+                        
+                        // Giải mã Base64 và chuyển đổi sang UTF-16
+                        byte[] bytes = Convert.FromBase64String(base64Text);
+                        string decodedText = System.Text.Encoding.Unicode.GetString(bytes);
+                        
+                        Debug.WriteLine($"Text sau khi decode: {decodedText}");
                         
                         Thread staThread = new Thread(() =>
                         {
-                            Clipboard.SetText(decodedText, TextDataFormat.Text);
+                            try 
+                            {
+                                // Sử dụng DataObject để giữ nguyên định dạng text
+                                IDataObject dataObject = new DataObject();
+                                dataObject.SetData(DataFormats.UnicodeText, decodedText);
+                                dataObject.SetData(DataFormats.Text, decodedText);
+                                Clipboard.SetDataObject(dataObject, true, 5, 100);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Lỗi khi set clipboard: {ex.Message}");
+                            }
                         });
                         staThread.SetApartmentState(ApartmentState.STA);
                         staThread.Start();
                         staThread.Join();
+                        
+                        await Task.Delay(200);
+                        
+                        // Giả lập Ctrl+V
+                        keybd_event((byte)Keys.Control, 0, 0, 0);
+                        keybd_event(0x56, 0, 0, 0);
+                        await Task.Delay(100);
+                        keybd_event(0x56, 0, KEYEVENTF_KEYUP, 0);
+                        keybd_event((byte)Keys.Control, 0, KEYEVENTF_KEYUP, 0);
                     }
                 }
             }
@@ -278,6 +306,7 @@ namespace System203
         H = 0x48,
         J = 0x4A,
         K = 0x4B,
+        V = 0x56,
         X = 0x58,
         ShiftKey = 0x10
     }

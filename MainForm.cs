@@ -1,6 +1,3 @@
-using System.Windows.Forms;
-using System.Drawing;
-
 namespace System203
 {
     public partial class MainForm : Form
@@ -9,17 +6,31 @@ namespace System203
         {
             InitializeComponent();
             
-            // Tạo và thêm các nút vào form
-            Button btnNoUI = CreateHackerButton("Hỏi Đáp không giao diện", 70, 40);
-            Button btnCtrlK = CreateHackerButton("Ctrl+K AI", 70, 100);
+            string hướngDẫn = "HƯỚNG DẪN SỬ DỤNG:\n\n" +
+                              "Ctrl + H: Đưa vùng chọn lên Firebase\n\n" +
+                              "Ctrl + K: Lấy vùng chọn từ Firebase\n\n" +
+                              "Ctrl + J: Gửi vùng chọn tới Gemini AI\n\n" +
+                              "Ctrl + Shift + X: Thoát chương trình";
+
+            // Điều chỉnh label hướng dẫn
+            Label lblGuide = new Label();
+            lblGuide.Text = hướngDẫn;
+            lblGuide.AutoSize = false;
+            lblGuide.Size = new Size(420, 220);
+            lblGuide.Location = new Point(15, 15);
+            lblGuide.Font = new Font("Consolas", 12, FontStyle.Regular);
+            lblGuide.ForeColor = Color.LightGreen;
+            Controls.Add(lblGuide);
+
+            // Điều chỉnh nút OK
+            Button btnOK = CreateHackerButton("OK", 175, 240);
+            btnOK.Size = new Size(100, 35);
+            btnOK.Click += (s, e) => {
+                this.Hide();
+                NoUIProgram.Start();
+            };
             
-            // Gán sự kiện click cho các nút
-            btnNoUI.Click += BtnNoUI_Click;
-            btnCtrlK.Click += BtnCtrlK_Click;
-            
-            // Thêm nút vào form
-            Controls.Add(btnNoUI);
-            Controls.Add(btnCtrlK);
+            Controls.Add(btnOK);
         }
 
         private void InitializeComponent()
@@ -28,8 +39,8 @@ namespace System203
             // 
             // MainForm
             // 
-            BackColor = Color.FromArgb(30, 30, 30);
-            ClientSize = new Size(382, 203);
+            BackColor = Color.FromArgb(25, 25, 25);
+            ClientSize = new Size(450, 290);
             ForeColor = Color.LightGreen;
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
@@ -51,18 +62,6 @@ namespace System203
             btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60);
             btn.Cursor = Cursors.Hand;
             return btn;
-        }
-
-        private void BtnNoUI_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            NoUIProgram.Start();
-        }
-
-        private void BtnCtrlK_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            CtrlKProgram.Start();
         }
     }
 } 

@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace System203
+﻿namespace System203
 {
     static class Program
     {
