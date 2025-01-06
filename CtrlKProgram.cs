@@ -136,8 +136,7 @@ namespace System203
                             },
                             new {
                                 role = "model",
-                                parts = new[] { new { text = "{\n\"code\":\"//mã c# kết nối CSDL\\nusing System.Data.SqlClient;\\n\\nstring connectionString = \\\"Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUserName;Password=YourPassword;\\\";\\n\\nusing (SqlConnection connection = new SqlConnection(connectionString))\\n{\\n    try\\n    {\\n        connection.Open();\\n        Console.WriteLine(\\\"Kết nối thành công!\\\");\\n\\n        // Thực hiện các truy vấn dữ liệu ở đây\\n        string query = \\\"SELECT * FROM YourTableName\\\";\\n        using (SqlCommand command = new SqlCommand(query, connection))\\n        {\\n            using (SqlDataReader reader = command.ExecuteReader())\\n            {\\n                while (reader.Read())\\n                {\\n                    // Xử lý dữ liệu từ reader\\n                    Console.WriteLine($\\\"ID: {reader[0]}, Name: {reader[1]}\\\");\\n                }\\n            }\\n        }\\n    }\\n    catch (Exception ex)\\n    {\\n        Console.WriteLine($\\\"Lỗi kết nối: {ex.Message}\\\");\\n    }\\n    finally\\n    {\\n        if (connection.State == System.Data.ConnectionState.Open)\\n        {\\n            connection.Close();\\n        }\\n    }\\n}\"\n}" },
-                                new { text = "\n```" }
+                                parts = new[] { new { text = "```json\n{\n\"code\":\"//mã c# kết nối CSDL\\nusing System.Data.SqlClient;\\n\\nstring connectionString = \\\"Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUserName;Password=YourPassword;\\\";\\n\\nusing (SqlConnection connection = new SqlConnection(connectionString))\\n{\\n    try\\n    {\\n        connection.Open();\\n        Console.WriteLine(\\\"Kết nối thành công!\\\");\\n\\n        // Thực hiện các truy vấn dữ liệu ở đây\\n        string query = \\\"SELECT * FROM YourTableName\\\";\\n        using (SqlCommand command = new SqlCommand(query, connection))\\n        {\\n            using (SqlDataReader reader = command.ExecuteReader())\\n            {\\n                while (reader.Read())\\n                {\\n                    // Xử lý dữ liệu từ reader\\n                    Console.WriteLine($\\\"ID: {reader[0]}, Name: {reader[1]}\\\");\\n                }\\n            }\\n        }\\n    }\\n    catch (Exception ex)\\n    {\\n        Console.WriteLine($\\\"Lỗi kết nối: {ex.Message}\\\");\\n    }\\n    finally\\n    {\\n        if (connection.State == System.Data.ConnectionState.Open)\\n        {\\n            connection.Close();\\n        }\\n    }\\n}\"\n}\n```" }
                                 }
                             },
                             new {
@@ -146,9 +145,7 @@ namespace System203
                             },
                             new {
                                 role = "model",
-                                parts = new[] { new { text = "```json\n" },
-                                new { text = "{\n\"code\":\"//Mã tính 1+1=\\nint a = 1;\\nint b = 1;\\nint sum = a + b;\\nConsole.WriteLine(sum);\"\n}" },
-                                new { text = "\n```" }
+                                parts = new[] { new { text = "```json\n{\n\"code\":\"//Mã tính 1+1=\\nint a = 1;\\nint b = 1;\\nint sum = a + b;\\nConsole.WriteLine(sum);\"\n}\n```" }
                                 }
                             },
                             new {
